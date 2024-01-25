@@ -1,7 +1,8 @@
-import "./App.css";
+import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Registration from "./components/Registration";
-import Dashboard from "./components/Dashboard";
+import Panel from "./components/Panel";
+import "./App.css";
 
 const appRoute = createBrowserRouter([
   {
@@ -10,7 +11,7 @@ const appRoute = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <Dashboard />,
+    element: <Panel />,
   },
 ]);
 

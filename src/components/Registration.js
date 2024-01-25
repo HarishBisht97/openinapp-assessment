@@ -1,4 +1,64 @@
+import React, { useState } from "react";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import { useNavigate } from "react-router-dom";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDD1eEgoqzwyQD260y7w8cQIr2yZvoctmE",
+  authDomain: "netflix-gpt-16037.firebaseapp.com",
+  projectId: "netflix-gpt-16037",
+  storageBucket: "netflix-gpt-16037.appspot.com",
+  messagingSenderId: "61403770563",
+  appId: "1:61403770563:web:c5fcb6684b446fcb5e7c76",
+  measurementId: "G-CKK3YEYQYQ",
+};
+
+initializeApp(firebaseConfig);
+
 const Registration = () => {
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const auth = getAuth();
+
+  const navigate = useNavigate();
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleSignIn = () => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        navigate("/dashboard");
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  };
+  const handleGoogleSignIn = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          navigate("/dashboard");
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    } catch (error) {
+      console.error("Google Sign-In Error", error);
+    }
+  };
+
   return (
     <div className="Registration">
       <div className="bg-slate-50 flex flex-col justify-center items-stretch">
@@ -58,22 +118,19 @@ const Registration = () => {
                   Sign in to your account
                 </div>
                 <div className="self-stretch flex w-full items-stretch justify-between gap-5 mt-8 max-md:max-w-full max-md:flex-wrap">
-                  <div className="flex-col overflow-hidden relative flex aspect-[6.1875] items-stretch justify-between gap-5 px-5 py-2 max-md:px-5">
-                    <img
-                      loading="lazy"
-                      alt="img"
-                      src="https://cdn.builder.io/api/v1/image/assets/TEMP/7cfc3eda621369aae7b1346327159da160ab5a6a303bb10d4a6fbccb96717c93?"
-                      className="absolute h-full w-full object-cover object-center inset-0"
-                    />
+                  <div className="bg-white flex justify-between gap-5 px-14 py-2 rounded-xl items-start max-md:px-5">
                     <img
                       loading="lazy"
                       alt="img"
                       src="https://cdn.builder.io/api/v1/image/assets/TEMP/11ed72cf772413cafc39e7b32e40e5cb049386428c58f699cb44ccb41f39844b?"
                       className="aspect-[0.94] object-contain object-center w-[15px] overflow-hidden shrink-0 max-w-full"
                     />
-                    <div className="relative justify-center text-zinc-500 text-center text-xs mt-1">
-                      Sign in with Google
-                    </div>
+                    <button
+                      className="justify-center text-zinc-500 text-center text-xs grow shrink basis-auto"
+                      onClick={handleGoogleSignIn}
+                    >
+                      Login with Google
+                    </button>
                   </div>
                   <div className="bg-white flex justify-between gap-5 px-14 py-2 rounded-xl items-start max-md:px-5">
                     <img
@@ -82,7 +139,7 @@ const Registration = () => {
                       src="https://cdn.builder.io/api/v1/image/assets/TEMP/200156a8fae31a8a4ea31446b6c04ff69fb330aa240e7369b660f7cf17ac4b81?"
                       className="aspect-[0.75] object-contain object-center w-3 overflow-hidden shrink-0 max-w-full"
                     />
-                    <div className="justify-center text-zinc-500 text-center text-xs grow shrink basis-auto mt-1.5">
+                    <div className="justify-center text-zinc-500 text-center text-xs grow shrink basis-auto">
                       Sign in with Apple
                     </div>
                   </div>
@@ -91,22 +148,35 @@ const Registration = () => {
                   <div className="text-black text-base max-md:max-w-full">
                     Email address
                   </div>
-                  <div className="text-black text-base bg-neutral-100 justify-center mt-4 pl-4 pr-16 py-4 rounded-xl items-start max-md:max-w-full max-md:pr-5">
-                    johndoe@gmail.com
+                  <div>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={handleEmailChange}
+                      className="text-black text-base w-full  bg-neutral-100 justify-center mt-4 pl-4 pr-16 py-4 rounded-xl items-start max-md:max-w-full max-md:pr-5"
+                    />
                   </div>
                   <div className="text-black text-base mt-7 max-md:max-w-full">
                     Password
                   </div>
-                  <div className="bg-gray-200 flex items-center justify-between gap-3 mt-4 px-6 py-3 rounded-xl max-md:max-w-full max-md:flex-wrap max-md:px-5">
-                    <div className="text-black text-base grow whitespace-nowrap my-auto">
-                      ••••••••
+                  <div>
+                    <div>
+                      <input
+                        type="password"
+                        value={password}
+                        onChange={handlePasswordChange}
+                        className="w-full text-black text-base grow whitespace-nowrap my-auto bg-gray-200 flex items-center justify-between gap-3 mt-4 px-6 py-3 rounded-xl max-md:max-w-full max-md:flex-wrap max-md:px-5"
+                      />
                     </div>
                     <div className="bg-neutral-400 self-stretch w-px shrink-0 h-5" />
                   </div>
                   <div className="text-blue-600 text-base mt-7 max-md:max-w-full">
                     Forgot password?
                   </div>
-                  <div className="text-white text-center text-base font-bold bg-indigo-500 justify-center items-center mt-6 px-16 py-3.5 rounded-xl max-md:max-w-full max-md:px-5">
+                  <div
+                    onClick={handleSignIn}
+                    className="text-white text-center text-base font-bold bg-indigo-500 justify-center items-center mt-6 px-16 py-3.5 rounded-xl max-md:max-w-full max-md:px-5"
+                  >
                     Sign In
                   </div>
                 </div>
