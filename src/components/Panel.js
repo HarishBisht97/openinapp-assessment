@@ -5,7 +5,6 @@ import SidePanel from "./SidePanel";
 
 const Panel = () => {
   const [excelFile, setExcelFile] = useState(null);
-  const [typeError, setTypeError] = useState(null);
 
   const [excelData, setExcelData] = useState(null);
 
@@ -18,14 +17,13 @@ const Panel = () => {
     let selectedFile = e.target.files[0];
     if (selectedFile) {
       if (selectedFile && fileTypes.includes(selectedFile.type)) {
-        setTypeError(null);
         let reader = new FileReader();
         reader.readAsArrayBuffer(selectedFile);
         reader.onload = (e) => {
           setExcelFile(e.target.result);
         };
       } else {
-        setTypeError("Please select only excel file types");
+        alert("Please select only excel file types");
         setExcelFile(null);
       }
     } else {

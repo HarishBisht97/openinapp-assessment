@@ -36,8 +36,7 @@ const Registration = () => {
 
   const handleSignIn = () => {
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
+      .then(() => {
         navigate("/dashboard");
       })
       .catch((error) => {
